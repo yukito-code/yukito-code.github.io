@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Vibe Coding 5 Level Test</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a14;--surface:#14142a;--surface2:#1e1e38;--border:#2a2a4a;--text:#e8e8f0;--dim:#8888a0;--accent:#6c5ce7;--accent2:#a29bfe;--pink:#fd79a8;--green:#00cec9;--orange:#fdcb6e;--blue:#74b9ff;--red:#ff7675;--linec:#06c755}
+body{font-family:'Helvetica Neue',Arial,'Hiragino Kaku Gothic ProN',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.ctn{max-width:780px;margin:0 auto;padding:24px 20px 48px}
+.intro{text-align:center;animation:fu .6s ease}
+.intro h1{font-size:34px;line-height:1.4;margin-bottom:12px;margin-top:24px}
+.intro h1 span{color:var(--accent2)}
+.intro .sub{color:var(--dim);font-size:16px;margin-bottom:36px;line-height:1.7}
+.axes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:32px;text-align:left}
+.ax{background:var(--surface);border-radius:10px;padding:14px 16px;border-left:3px solid var(--accent)}
+.ax:nth-child(2){border-left-color:var(--green)}
+.ax:nth-child(3){border-left-color:var(--orange)}
+.ax:nth-child(4){border-left-color:var(--pink)}
+.ax:nth-child(5){border-left-color:var(--blue);grid-column:1/3}
+.ax .n{font-size:13px;color:var(--dim)}
+.ax .nm{font-size:15px;font-weight:bold;margin-top:2px}
+.sbtn{background:linear-gradient(135deg,var(--accent),var(--pink));color:#fff;border:none;padding:18px 56px;border-radius:30px;font-size:19px;font-weight:bold;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.sbtn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(108,92,231,.4)}
+.quiz{display:none;animation:fu .5s ease}
+.pbar{background:var(--surface);border-radius:10px;height:8px;overflow:hidden;margin-bottom:8px}
+.pfill{height:100%;background:linear-gradient(90deg,var(--accent),var(--pink));border-radius:10px;transition:width .3s ease}
+.ptxt{font-size:14px;color:var(--dim);text-align:right;margin-bottom:16px}
+.clbl{font-size:14px;color:var(--accent2);margin-bottom:6px;letter-spacing:1px}
+.qc{background:var(--surface);border-radius:16px;padding:28px 24px;margin-bottom:16px;border:1px solid var(--border)}
+.qn{font-size:14px;color:var(--dim);margin-bottom:6px}
+.qt{font-size:17px;line-height:1.7;margin-bottom:24px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.ob{background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:16px 18px;color:var(--text);font-size:16px;cursor:pointer;transition:all .2s;text-align:left;display:flex;align-items:center;gap:10px}
+.ob:hover{border-color:var(--accent);background:rgba(108,92,231,.08)}
+.ob.sel{border-color:var(--accent);background:rgba(108,92,231,.15)}
+.ob .dt{width:20px;height:20px;border-radius:50%;border:2px solid var(--dim);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.ob.sel .dt{border-color:var(--accent);background:var(--accent)}
+.ob.sel .dt::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff}
+.nbtn{margin-top:20px}
+.pbtn{width:100%;padding:16px;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;border:none;background:var(--surface2);color:var(--dim);transition:all .2s}
+.pbtn:hover{background:var(--border)}
+.pbtn:disabled{opacity:.3;cursor:not-allowed}
+.result{display:none;animation:fu .6s ease;text-align:center}
+.rh{margin-bottom:24px}
+.lb{display:inline-block;font-size:16px;padding:6px 20px;border-radius:20px;margin-bottom:12px}
+.result h2{font-size:30px;margin-bottom:4px}
+.ln{font-size:24px;font-weight:bold;margin-bottom:6px}
+.st{font-size:16px;color:var(--dim)}
+.rw{margin:28px auto;max-width:100%;overflow:visible;padding:0 10px}
+.rw canvas{width:100%;height:auto}
+.abrs{text-align:left;margin:0 auto 28px;max-width:560px}
+.abr{margin-bottom:14px}
+.abh{display:flex;justify-content:space-between;font-size:15px;margin-bottom:5px}
+.abn{font-weight:bold}
+.abs{color:var(--accent2)}
+.abt{background:var(--surface);border-radius:6px;height:12px;overflow:hidden}
+.abf{height:100%;border-radius:6px;transition:width 1s ease}
+.sbox{background:var(--surface);border-radius:16px;padding:24px;margin-bottom:20px;text-align:left}
+.sbox h3{font-size:17px;margin-bottom:10px}
+.tag{display:inline-block;padding:6px 14px;border-radius:8px;font-size:15px}
+.sbox p{font-size:15px;color:var(--dim);margin-top:8px;line-height:1.6}
+.advb{background:var(--surface);border-radius:16px;padding:28px 24px;margin-bottom:24px;text-align:left;border-left:4px solid var(--accent)}
+.advb h3{font-size:18px;margin-bottom:10px}
+.advb p{font-size:16px;color:var(--dim);line-height:1.8;margin-bottom:12px}
+.cta{background:linear-gradient(135deg,rgba(108,92,231,.15),rgba(253,121,168,.1));border:1px solid var(--accent);border-radius:16px;padding:32px 24px;margin-bottom:20px}
+.cta h3{font-size:18px;margin-bottom:8px}
+.cta p{font-size:15px;color:var(--dim);margin-bottom:16px;line-height:1.7}
+.lbtn{display:inline-block;background:var(--linec);color:#fff;padding:16px 42px;border-radius:30px;font-size:17px;font-weight:bold;text-decoration:none;transition:transform .2s}
+.lbtn:hover{transform:translateY(-2px)}
+.rbtn{margin-top:20px;background:var(--surface2);color:var(--dim);border:1px solid var(--border);padding:14px 36px;border-radius:12px;font-size:16px;cursor:pointer}
+.rbtn:hover{border-color:var(--accent);color:var(--text)}
+@keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.intro h1{font-size:26px}.axes{grid-template-columns:1fr}.ax:nth-child(5){grid-column:auto}.qt{font-size:14px}}
+</style>
+</head>
+<body>
+<div class="ctn">
+<div class="intro" id="intro">
+  <h1>あなたの<span>バイブコーディング力</span>を<br>5段階で診断</h1>
+  <p class="sub">25問のセルフチェックで現在地を把握し、<br>次に学ぶべきスキルが明確になるテストです</p>
+  <div class="axes">
+    <div class="ax"><div class="n">軸 1</div><div class="nm">&#x1F3AF; プロンプト設計力</div></div>
+    <div class="ax"><div class="n">軸 2</div><div class="nm">&#x1F4D6; コード理解力</div></div>
+    <div class="ax"><div class="n">軸 3</div><div class="nm">&#x1F41D; デバッグ誘導力</div></div>
+    <div class="ax"><div class="n">軸 4</div><div class="nm">&#x1F4D0; 設計・仕様言語化力</div></div>
+    <div class="ax"><div class="n">軸 5</div><div class="nm">&#x1F6E0;&#xFE0F; ツール活用力</div></div>
+  </div>
+  <button class="sbtn" onclick="start()">診断スタート（約3分）</button>
+</div>
+<div class="quiz" id="quiz">
+  <div class="pbar"><div class="pfill" id="pf"></div></div>
+  <div class="ptxt" id="pt"></div>
+  <div class="clbl" id="cl"></div>
+  <div class="qc" id="qc">
+    <div class="qn" id="qn"></div>
+    <div class="qt" id="qtx"></div>
+    <div class="opts" id="op"></div>
+  </div>
+  <div class="nbtn">
+    <button class="pbtn" id="pb" onclick="goBack()">&#x2190; 戻る</button>
+  </div>
+</div>
+<div class="result" id="res"></div>
+</div>
+<script>
+var C=[
+{nm:"\u30D7\u30ED\u30F3\u30D7\u30C8\u8A2D\u8A08\u529B",ic:"\uD83C\uDFAF",cl:"#6c5ce7"},
+{nm:"\u30B3\u30FC\u30C9\u7406\u89E3\u529B",ic:"\uD83D\uDCD6",cl:"#00cec9"},
+{nm:"\u30C7\u30D0\u30C3\u30B0\u8A98\u5C0E\u529B",ic:"\uD83D\uDC1D",cl:"#fdcb6e"},
+{nm:"\u8A2D\u8A08\u30FB\u4ED5\u69D8\u8A00\u8A9E\u5316\u529B",ic:"\uD83D\uDCD0",cl:"#fd79a8"},
+{nm:"\u30C4\u30FC\u30EB\u6D3B\u7528\u529B",ic:"\uD83D\uDEE0\uFE0F",cl:"#74b9ff"}
+];
+var Q=[
+"AI\u306B\u6307\u793A\u3092\u51FA\u3059\u3068\u304D\u3001\u300C\u25CB\u25CB\u3092\u4F5C\u3063\u3066\u300D\u3060\u3051\u3067\u306A\u304F\u3001\u4F7F\u7528\u6280\u8853\u30FB\u51FA\u529B\u5F62\u5F0F\u30FB\u5236\u7D04\u6761\u4EF6\u307E\u3067\u542B\u3081\u3066\u66F8\u3044\u3066\u3044\u308B",
+"AI\u306E\u56DE\u7B54\u304C\u671F\u5F85\u901A\u308A\u3067\u306A\u304B\u3063\u305F\u3068\u304D\u3001\u30D7\u30ED\u30F3\u30D7\u30C8\u306E\u3069\u3053\u3092\u4FEE\u6B63\u3059\u3079\u304D\u304B\u5224\u65AD\u3067\u304D\u308B",
+"\u30B7\u30B9\u30C6\u30E0\u30D7\u30ED\u30F3\u30D7\u30C8\uFF08AI\u306E\u5F79\u5272\u5B9A\u7FA9\uFF09\u3068\u30E6\u30FC\u30B6\u30FC\u30D7\u30ED\u30F3\u30D7\u30C8\uFF08\u5B9F\u969B\u306E\u6307\u793A\uFF09\u3092\u4F7F\u3044\u5206\u3051\u3089\u308C\u308B",
+"Few-Shot\uFF08\u56DE\u7B54\u4F8B\u3092\u793A\u3059\uFF09\u3084Chain of Thought\uFF08\u6BB5\u968E\u7684\u601D\u8003\uFF09\u306A\u3069\u306E\u30C6\u30AF\u30CB\u30C3\u30AF\u3092\u610F\u8B58\u7684\u306B\u4F7F\u3048\u308B",
+"AI\u306B\u300C\u307E\u305A\u5168\u4F53\u306E\u65B9\u91DD\u3092\u8AAC\u660E\u3057\u3066\u304B\u3089\u30B3\u30FC\u30C9\u3092\u66F8\u3044\u3066\u300D\u306E\u3088\u3046\u306B\u3001\u51FA\u529B\u306E\u9806\u5E8F\u3084\u5F62\u5F0F\u3092\u6307\u5B9A\u3057\u3066\u56DE\u7B54\u306E\u8CEA\u3092\u4E0A\u3052\u3066\u3044\u308B",
+"AI\u304C\u751F\u6210\u3057\u305F\u30B3\u30FC\u30C9\u3092\u8AAD\u3093\u3067\u3001\u5404\u884C\u304C\u4F55\u3092\u3057\u3066\u3044\u308B\u304B\u6982\u306D\u8AAC\u660E\u3067\u304D\u308B",
+"\u751F\u6210\u3055\u308C\u305F\u30B3\u30FC\u30C9\u306B\u660E\u3089\u304B\u306A\u30D0\u30B0\u3084\u30BB\u30AD\u30E5\u30EA\u30C6\u30A3\u30EA\u30B9\u30AF\u304C\u3042\u3063\u305F\u3068\u304D\u6C17\u3065\u3051\u308B",
+"\u5909\u6570\u540D\u30FB\u95A2\u6570\u540D\u30FB\u30AF\u30E9\u30B9\u69CB\u6210\u3092\u898B\u3066\u3001\u30B3\u30FC\u30C9\u5168\u4F53\u306E\u8A2D\u8A08\u610F\u56F3\u3092\u628A\u63E1\u3067\u304D\u308B",
+"AI\u304C\u4F7F\u3063\u3066\u3044\u308B\u30E9\u30A4\u30D6\u30E9\u30EA\u3084\u30D5\u30EC\u30FC\u30E0\u30EF\u30FC\u30AF\u306E\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u81EA\u5206\u3067\u8AAD\u3093\u3067\u7406\u89E3\u3067\u304D\u308B",
+"\u751F\u6210\u3055\u308C\u305F\u30B3\u30FC\u30C9\u306E\u4E2D\u3067\u300C\u3053\u306E\u90E8\u5206\u306F\u4E0D\u8981\u300D\u300C\u3053\u306E\u90E8\u5206\u306F\u6539\u5584\u3059\u3079\u304D\u300D\u3068\u5224\u65AD\u3067\u304D\u308B",
+"\u30A8\u30E9\u30FC\u30E1\u30C3\u30BB\u30FC\u30B8\u3092\u8AAD\u3093\u3067\u3001\u539F\u56E0\u306E\u898B\u5F53\u3092\u3064\u3051\u3066\u304B\u3089AI\u306B\u8CEA\u554F\u3067\u304D\u308B",
+"\u300C\u52D5\u304D\u307E\u305B\u3093\u300D\u3067\u306F\u306A\u304F\u3001\u518D\u73FE\u624B\u9806\u30FB\u671F\u5F85\u52D5\u4F5C\u30FB\u5B9F\u969B\u306E\u52D5\u4F5C\u3092\u6574\u7406\u3057\u3066AI\u306B\u4F1D\u3048\u3089\u308C\u308B",
+"AI\u306E\u4FEE\u6B63\u63D0\u6848\u304C\u9593\u9055\u3063\u3066\u3044\u305F\u3068\u304D\u3001\u5225\u306E\u30A2\u30D7\u30ED\u30FC\u30C1\u3092\u6307\u793A\u3067\u304D\u308B",
+"console.log / print\u6587\u306A\u3069\u3092\u4F7F\u3063\u3066\u3001\u81EA\u5206\u3067\u554F\u984C\u7B87\u6240\u3092\u7279\u5B9A\u3059\u308B\u7FD2\u6163\u304C\u3042\u308B",
+"AI\u306B\u4FEE\u6B63\u3092\u4F9D\u983C\u3059\u308B\u3068\u304D\u3001\u5909\u66F4\u7BC4\u56F2\u3092\u9650\u5B9A\u3057\u3066\u6307\u793A\u3067\u304D\u308B\uFF08\u300C\u3053\u306E\u95A2\u6570\u3060\u3051\u76F4\u3057\u3066\u300D\u7B49\uFF09",
+"\u30A2\u30D7\u30EA\u3092\u4F5C\u308A\u59CB\u3081\u308B\u524D\u306B\u3001\u753B\u9762\u69CB\u6210\u30FB\u30C7\u30FC\u30BF\u306E\u6D41\u308C\u30FB\u4E3B\u8981\u6A5F\u80FD\u3092\u30EA\u30B9\u30C8\u30A2\u30C3\u30D7\u3057\u3066\u3044\u308B",
+"\u300C\u30E6\u30FC\u30B6\u30FC\u304C\u25CB\u25CB\u3057\u305F\u3089\u25B3\u25B3\u304C\u8D77\u304D\u308B\u300D\u306E\u3088\u3046\u306B\u3001\u30E6\u30FC\u30B6\u30FC\u76EE\u7DDA\u3067\u4ED5\u69D8\u3092\u8AAC\u660E\u3067\u304D\u308B",
+"\u30C7\u30FC\u30BF\u30D9\u30FC\u30B9\u306E\u30C6\u30FC\u30D6\u30EB\u69CB\u9020\u3084API\u8A2D\u8A08\u3092\u3001AI\u306B\u6307\u793A\u3067\u304D\u308B\u30EC\u30D9\u30EB\u3067\u6574\u7406\u3067\u304D\u308B",
+"\u5927\u304D\u306A\u6A5F\u80FD\u3092\u5C0F\u3055\u306A\u30BF\u30B9\u30AF\u306B\u5206\u5272\u3057\u3066\u3001AI\u306B\u6BB5\u968E\u7684\u306B\u4F9D\u983C\u3067\u304D\u308B",
+"\u975E\u6A5F\u80FD\u8981\u4EF6\uFF08\u30EC\u30B9\u30DD\u30F3\u30B9\u901F\u5EA6\u3001\u30BB\u30AD\u30E5\u30EA\u30C6\u30A3\u3001\u30B9\u30DE\u30DB\u5BFE\u5FDC\u7B49\uFF09\u3082AI\u3078\u306E\u6307\u793A\u306B\u542B\u3081\u3089\u308C\u308B",
+"Cursor\u3001GitHub Copilot\u3001Replit\u7B49\u306EAI\u30B3\u30FC\u30C7\u30A3\u30F3\u30B0\u30C4\u30FC\u30EB\u3092\u65E5\u5E38\u7684\u306B\u4F7F\u3063\u3066\u3044\u308B",
+"AI\u30C4\u30FC\u30EB\u306ETab\u88DC\u5B8C\u30FB\u30A4\u30F3\u30E9\u30A4\u30F3\u63D0\u6848\u30FB\u30C1\u30E3\u30C3\u30C8\u6A5F\u80FD\u3092\u5834\u9762\u306B\u5FDC\u3058\u3066\u4F7F\u3044\u5206\u3051\u3089\u308C\u308B",
+"Git\uFF08\u30D0\u30FC\u30B8\u30E7\u30F3\u7BA1\u7406\uFF09\u3092\u4F7F\u3063\u3066\u3001AI\u304C\u5909\u66F4\u3057\u305F\u30B3\u30FC\u30C9\u3092\u5B89\u5168\u306B\u7BA1\u7406\u30FB\u5DFB\u304D\u623B\u3057\u3067\u304D\u308B",
+"MCP\uFF08Model Context Protocol\uFF09\u3092\u4F7F\u3063\u3066\u3001AI\u306BGitHub\u30FBDB\u30FB\u5916\u90E8\u30B5\u30FC\u30D3\u30B9\u306E\u30C7\u30FC\u30BF\u3092\u76F4\u63A5\u53C2\u7167\u3055\u305B\u305F\u3053\u3068\u304C\u3042\u308B",
+"AI\u304B\u3089\u5916\u90E8API\u3092\u547C\u3073\u51FA\u3059\u4ED5\u7D44\u307F\uFF08Function Calling\u3001REST API\u9023\u643A\u7B49\uFF09\u3092\u7D44\u307F\u8FBC\u3093\u3060\u958B\u767A\u3092\u3057\u305F\u3053\u3068\u304C\u3042\u308B"
+];
+var OL=["\u306F\u3044","\u307E\u3042\u307E\u3042","\u3044\u3044\u3048"];
+var OP=[2,1,0];
+var LV=[
+{nm:"\u30D3\u30AE\u30CA\u30FC",mn:0,mx:10,em:"\u2B50",cl:"#8888a0",ms:"\u307E\u305A\u306F\u300C\u4F1D\u3048\u65B9\u300D\u3092\u5909\u3048\u308B\u3060\u3051\u3067\u5287\u7684\u306B\u5909\u308F\u308B",dt:"AI\u3068\u306E\u5BFE\u8A71\u304C\u307E\u3060\u624B\u63A2\u308A\u306E\u6BB5\u968E\u3067\u3059\u3002\u300CAI\u3063\u3066\u3059\u3054\u3044\u3051\u3069\u601D\u3063\u305F\u3088\u3046\u306B\u52D5\u304B\u306A\u3044\u300D\u3068\u611F\u3058\u308B\u3053\u3068\u304C\u591A\u3044\u306E\u3067\u306F\u306A\u3044\u3067\u3057\u3087\u3046\u304B\u3002",ac:"\u30D7\u30ED\u30F3\u30D7\u30C8\u306E\u57FA\u672C\u30C6\u30F3\u30D7\u30EC\u30FC\u30C8\u300C\u5F79\u5272 + \u5177\u4F53\u7684\u6307\u793A + \u51FA\u529B\u5F62\u5F0F\u300D\u30923\u3064\u899A\u3048\u308B\u3060\u3051\u3067\u3001AI\u306E\u51FA\u529B\u54C1\u8CEA\u304C\u5287\u7684\u306B\u5909\u308F\u308A\u307E\u3059\u3002Python\u306E\u57FA\u790E\u6587\u6CD5\u3068\u4E26\u884C\u3057\u3066\u7DF4\u7FD2\u3059\u308C\u3070\u3001\u4E00\u6C17\u306BLv.2\uFF5E3\u306B\u5230\u9054\u3067\u304D\u307E\u3059\u3002"},
+{nm:"\u30B9\u30BF\u30FC\u30BF\u30FC",mn:11,mx:20,em:"\u2B50\u2B50",cl:"#74b9ff",ms:"\u30B3\u30FC\u30C9\u7406\u89E3\u529B\u304C\u30D6\u30EC\u30A4\u30AF\u30B9\u30EB\u30FC\u306E\u9375",dt:"\u7C21\u5358\u306A\u3082\u306E\u306FAI\u306B\u4F5C\u3089\u305B\u3089\u308C\u308B\u3088\u3046\u306B\u306A\u3063\u3066\u304D\u305F\u6BB5\u968E\u3002\u305F\u3060\u5C11\u3057\u8907\u96D1\u306B\u306A\u308B\u3068\u300CAI\u304C\u4F55\u3092\u51FA\u529B\u3057\u305F\u306E\u304B\u308F\u304B\u3089\u306A\u3044\u300D\u58C1\u306B\u3076\u3064\u304B\u308A\u304C\u3061\u3067\u3059\u3002",ac:"Python\u306E\u57FA\u790E\uFF08\u5909\u6570\u30FB\u95A2\u6570\u30FB\u30AF\u30E9\u30B9\u30FB\u6761\u4EF6\u5206\u5C90\u30FB\u30EB\u30FC\u30D7\uFF09\u3092\u4F53\u7CFB\u7684\u306B\u7406\u89E3\u3059\u308B\u3068\u3001AI\u306E\u51FA\u529B\u304C\u300C\u8AAD\u3081\u308B\u300D\u3088\u3046\u306B\u306A\u308A\u3001\u4FEE\u6B63\u6307\u793A\u306E\u7CBE\u5EA6\u304C\u98DB\u8E8D\u7684\u306B\u4E0A\u304C\u308A\u307E\u3059\u3002AI\u304C\u751F\u6210\u3057\u305F\u30B3\u30FC\u30C9\u3092\u300C1\u884C\u305A\u3064\u89E3\u8AAC\u3055\u305B\u308B\u300D\u7FD2\u6163\u3092\u3064\u3051\u307E\u3057\u3087\u3046\u3002"},
+{nm:"\u30D7\u30E9\u30AF\u30C6\u30A3\u30B7\u30E7\u30CA\u30FC",mn:21,mx:30,em:"\u2B50\u2B50\u2B50",cl:"#00cec9",ms:"\u8A2D\u8A08\u529B\u3067\u5DEE\u304C\u3064\u304F\u30D5\u30A7\u30FC\u30BA",dt:"\u65E5\u5E38\u7684\u306BAI\u3092\u6D3B\u7528\u3067\u304D\u3066\u3044\u307E\u3059\u304C\u3001\u300C\u4F5C\u308A\u59CB\u3081\u3066\u304B\u3089\u8A2D\u8A08\u306E\u554F\u984C\u306B\u6C17\u3065\u304F\u300D\u300C\u3084\u308A\u76F4\u3057\u304C\u591A\u3044\u300D\u3068\u611F\u3058\u308B\u3053\u3068\u304C\u3042\u308B\u306F\u305A\u3067\u3059\u3002",ac:"\u30B3\u30FC\u30C9\u3092\u66F8\u304F\u524D\u306B\u300C\u8A2D\u8A08\u66F8\u300D\u3092AI\u3068\u4E00\u7DD2\u306B\u4F5C\u308B\u7FD2\u6163\u3092\u3064\u3051\u307E\u3057\u3087\u3046\u3002\u753B\u9762\u8A2D\u8A08\u2192\u30C7\u30FC\u30BF\u8A2D\u8A08\u2192API\u8A2D\u8A08\u2192\u5B9F\u88C5\u306E\u9806\u5E8F\u3067\u9032\u3081\u308B\u3060\u3051\u3067\u624B\u623B\u308A\u304C\u5927\u5E45\u306B\u6E1B\u308A\u307E\u3059\u3002\u6B21\u306B\u4F55\u304B\u4F5C\u308B\u3068\u304D\u300C\u307E\u305A\u8A2D\u8A08\u3060\u3051\u4F5C\u3063\u3066\u300D\u3068AI\u306B\u6307\u793A\u3057\u3066\u307F\u3066\u304F\u3060\u3055\u3044\u3002"},
+{nm:"\u30A2\u30C9\u30D0\u30F3\u30B9\u30C8",mn:31,mx:40,em:"\u2B50\u2B50\u2B50\u2B50",cl:"#fdcb6e",ms:"\u300C\u91CF\u7523\u300D\u304B\u3089\u300C\u54C1\u8CEA\u300D\u3078\u306E\u30B7\u30D5\u30C8",dt:"AI\u3068\u52B9\u7387\u7684\u306B\u958B\u767A\u3067\u304D\u308B\u5B9F\u529B\u304C\u3042\u308A\u307E\u3059\u3002\u6B21\u306E\u8AB2\u984C\u306F\u3001\u751F\u6210\u7269\u306E\u54C1\u8CEA\u3092\u30D7\u30ED\u30EC\u30D9\u30EB\u306B\u5F15\u304D\u4E0A\u3052\u3001\u30C1\u30FC\u30E0\u3084\u9867\u5BA2\u306B\u898B\u305B\u3089\u308C\u308B\u6C34\u6E96\u306B\u3059\u308B\u3053\u3068\u3067\u3059\u3002",ac:"\u30C6\u30B9\u30C8\u8A2D\u8A08\u30FB\u30A8\u30E9\u30FC\u30CF\u30F3\u30C9\u30EA\u30F3\u30B0\u30FB\u30D1\u30D5\u30A9\u30FC\u30DE\u30F3\u30B9\u6700\u9069\u5316\u3092AI\u306B\u4EFB\u305B\u308B\u30D7\u30ED\u30F3\u30D7\u30C8\u30D1\u30BF\u30FC\u30F3\u3092\u7FD2\u5F97\u3057\u307E\u3057\u3087\u3046\u3002AI\u306B\u300C\u3053\u306E\u30B3\u30FC\u30C9\u306E\u30EC\u30D3\u30E5\u30FC\u3092\u3057\u3066\u300D\u300C\u30C6\u30B9\u30C8\u30B1\u30FC\u30B9\u3092\u66F8\u3044\u3066\u300D\u3068\u4F9D\u983C\u3059\u308B\u7FD2\u6163\u3092\u52A0\u3048\u308B\u3060\u3051\u3067\u54C1\u8CEA\u304C\u4E00\u6BB5\u4E0A\u304C\u308A\u307E\u3059\u3002"},
+{nm:"\u30DE\u30B9\u30BF\u30FC",mn:41,mx:50,em:"\u2B50\u2B50\u2B50\u2B50\u2B50",cl:"#fd79a8",ms:"\u6559\u3048\u308B\u5074\u30FB\u4E8B\u696D\u3092\u4F5C\u308B\u5074\u3078",dt:"\u6280\u8853\u7684\u306B\u306F\u5341\u5206\u306A\u5B9F\u529B\u304C\u3042\u308A\u307E\u3059\u3002\u3042\u306A\u305F\u306E\u30B9\u30AD\u30EB\u306F\u3001\u81EA\u5206\u306E\u30D7\u30ED\u30C0\u30AF\u30C8\u958B\u767A\u3084\u30C1\u30FC\u30E0\u6307\u5C0E\u306B\u6D3B\u304B\u305B\u308B\u6BB5\u968E\u3067\u3059\u3002",ac:"Vibe Coding\u306E\u77E5\u898B\u3092\u4F53\u7CFB\u5316\u3057\u3001\u30C1\u30FC\u30E0\u3078\u306E\u6307\u5C0E\u3084\u81EA\u793E\u30D7\u30ED\u30C0\u30AF\u30C8\u958B\u767A\u306B\u5C55\u958B\u3057\u307E\u3057\u3087\u3046\u3002\u30D7\u30ED\u30F3\u30D7\u30C8\u30E9\u30A4\u30D6\u30E9\u30EA\u306E\u69CB\u7BC9\u3084\u958B\u767A\u30D5\u30ED\u30FC\u306E\u6A19\u6E96\u5316\u304C\u6B21\u306E\u30C6\u30FC\u30DE\u3067\u3059\u3002\u307E\u305A\u306F1\u3064\u3001\u81EA\u5206\u306E\u30A2\u30A4\u30C7\u30A2\u3092\u30D7\u30ED\u30C0\u30AF\u30C8\u3068\u3057\u3066\u516C\u958B\u3057\u3066\u307F\u307E\u3057\u3087\u3046\u3002"}
+];
+var A=[];for(var i=0;i<25;i++)A.push(-1);
+var cq=0;
+function start(){document.getElementById('intro').style.display='none';document.getElementById('quiz').style.display='block';rnd();}
+function rnd(){
+  var ci=Math.floor(cq/5),c=C[ci];
+  document.getElementById('cl').textContent=c.ic+' '+c.nm+'\uFF08'+(ci+1)+'/5\uFF09';
+  document.getElementById('cl').style.color=c.cl;
+  document.getElementById('qn').textContent='Q'+(cq+1)+' / 25';
+  document.getElementById('qtx').textContent=Q[cq];
+  document.getElementById('pf').style.width=((cq+1)/25*100)+'%';
+  document.getElementById('pt').textContent=(cq+1)+' / 25';
+  var o=document.getElementById('op');o.innerHTML='';
+  for(var i=0;i<OL.length;i++){
+    var b=document.createElement('button');
+    b.className='ob'+(A[cq]===i?' sel':'');
+    b.innerHTML='<span class="dt"></span>'+OL[i];
+    b.setAttribute('data-i',i);
+    b.onclick=function(){sel(parseInt(this.getAttribute('data-i')));};
+    o.appendChild(b);
+  }
+  document.getElementById('pb').disabled=cq===0;
+}
+function sel(i){
+  A[cq]=i;
+  var bs=document.querySelectorAll('.ob');
+  for(var j=0;j<bs.length;j++)bs[j].className='ob'+(j===i?' sel':'');
+  setTimeout(function(){
+    if(cq===24){showRes();}
+    else{cq++;var c=document.getElementById('qc');c.style.animation='none';void c.offsetHeight;c.style.animation='fu .3s ease';rnd();}
+  },300);
+}
+function goBack(){if(cq>0){cq--;var c=document.getElementById('qc');c.style.animation='none';void c.offsetHeight;c.style.animation='fu .3s ease';rnd();}}
+function showRes(){
+  document.getElementById('quiz').style.display='none';
+  var r=document.getElementById('res');r.style.display='block';
+  var cs=[0,0,0,0,0];
+  for(var i=0;i<A.length;i++)cs[Math.floor(i/5)]+=OP[A[i]];
+  var t=0;for(var i=0;i<cs.length;i++)t+=cs[i];
+  var lv=LV[0],li=0;
+  for(var i=0;i<LV.length;i++){if(t>=LV[i].mn&&t<=LV[i].mx){lv=LV[i];li=i;break;}}
+  var mx=0,mn=10,mxi=0,mni=0;
+  for(var i=0;i<cs.length;i++){if(cs[i]>mx){mx=cs[i];mxi=i;}if(cs[i]<mn){mn=cs[i];mni=i;}}
+  var bh='';
+  for(var i=0;i<cs.length;i++){
+    bh+='<div class="abr"><div class="abh"><span class="abn">'+C[i].ic+' '+C[i].nm+'</span><span class="abs">'+cs[i]+' / 10</span></div><div class="abt"><div class="abf" style="width:0%;background:'+C[i].cl+'" data-w="'+(cs[i]*10)+'"></div></div></div>';
+  }
+  r.innerHTML='<div class="rh"><div class="lb" style="background:'+lv.cl+'22;color:'+lv.cl+';border:1px solid '+lv.cl+'">'+lv.em+'</div><h2>Lv.'+(li+1)+'</h2><div class="ln" style="color:'+lv.cl+'">'+lv.nm+'</div><div class="st">'+t+' / 50 \u70B9</div></div>'
+  +'<div class="rw"><canvas id="rc" width="500" height="420"></canvas></div>'
+  +'<div class="abrs">'+bh+'</div>'
+  +'<div class="sbox"><h3>\uD83D\uDCAA \u3042\u306A\u305F\u306E\u5F37\u307F</h3><span class="tag" style="background:'+C[mxi].cl+'22;color:'+C[mxi].cl+'">'+C[mxi].ic+' '+C[mxi].nm+'\uFF08'+cs[mxi]+'/10\u70B9\uFF09</span></div>'
+  +'<div class="sbox"><h3>\uD83D\uDCC8 \u4F38\u3073\u3057\u308D</h3><span class="tag" style="background:'+C[mni].cl+'22;color:'+C[mni].cl+'">'+C[mni].ic+' '+C[mni].nm+'\uFF08'+cs[mni]+'/10\u70B9\uFF09</span><p>\u3053\u306E\u8EF8\u3092\u91CD\u70B9\u7684\u306B\u935B\u3048\u308B\u3053\u3068\u3067\u3001\u7DCF\u5408\u30EC\u30D9\u30EB\u304C\u4E00\u6BB5\u4E0A\u304C\u308A\u307E\u3059\u3002</p></div>'
+  +'<div class="advb" style="border-left-color:'+lv.cl+'"><h3 style="color:'+lv.cl+'">'+lv.ms+'</h3><p>'+lv.dt+'</p><p><strong style="color:var(--text)">\u6B21\u306E\u30B9\u30C6\u30C3\u30D7\uFF1A</strong>'+lv.ac+'</p></div>'
+  +'<div class="cta"><h3>\uFF3C \u3042\u306A\u305F\u5C02\u7528\u306E\u5B66\u7FD2\u30ED\u30FC\u30C9\u30DE\u30C3\u30D7\u3092\u4F5C\u6210\u3057\u307E\u3059 \uFF0F</h3><p>LINE\u516C\u5F0F\u30A2\u30AB\u30A6\u30F3\u30C8\u306B\u767B\u9332\u3059\u308B\u3068\u3001\u8A3A\u65AD\u7D50\u679C\u3092\u3082\u3068\u306B\u3057\u305F\u500B\u5225\u5B66\u7FD2\u30D7\u30E9\u30F3\u3092\u7121\u6599\u3067\u4F5C\u6210\u3002AI\u00D7\u30D7\u30ED\u30B0\u30E9\u30DF\u30F3\u30B0\u306B\u95A2\u3059\u308B\u8C6A\u83EF\u7279\u5178\u3082\u591A\u6570\u914D\u5E03\u4E2D\u3067\u3059\u3002</p><a href="https://utage-system.com/line/open/QiKfkmrjBfNk?mtid=QV9zXUNpWajo" target="_blank" class="lbtn">LINE\u3067\u7121\u6599\u76F8\u8AC7\u3059\u308B</a></div>'
+  +'<button class="rbtn" onclick="retry()">\uD83D\uDD04 \u3082\u3046\u4E00\u5EA6\u8A3A\u65AD\u3059\u308B</button>';
+  setTimeout(function(){dR(cs);},100);
+  setTimeout(function(){var f=document.querySelectorAll('.abf');for(var i=0;i<f.length;i++)f[i].style.width=f[i].getAttribute('data-w')+'%';},200);
+  conf();
+}
+function dR(sc){
+  var cv=document.getElementById('rc');if(!cv)return;
+  var x=cv.getContext('2d'),W=500,H=420,cx=W/2,cy=H/2,R=120;
+  cv.width=W*2;cv.height=H*2;cv.style.width='100%';cv.style.height='auto';x.scale(2,2);
+  var n=5,st=Math.PI*2/n,of=-Math.PI/2;
+  function gp(i,r){var a=of+i*st;return[cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+  for(var g=1;g<=5;g++){x.beginPath();for(var i=0;i<n;i++){var p=gp(i,R*g/5);i===0?x.moveTo(p[0],p[1]):x.lineTo(p[0],p[1]);}x.closePath();x.strokeStyle=g===5?'rgba(108,92,231,.3)':'rgba(255,255,255,.06)';x.lineWidth=g===5?1.5:0.8;x.stroke();}
+  for(var i=0;i<n;i++){var p=gp(i,R);x.beginPath();x.moveTo(cx,cy);x.lineTo(p[0],p[1]);x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=0.8;x.stroke();}
+  x.beginPath();for(var i=0;i<sc.length;i++){var p=gp(i,R*sc[i]/10);i===0?x.moveTo(p[0],p[1]):x.lineTo(p[0],p[1]);}x.closePath();x.fillStyle='rgba(108,92,231,.25)';x.fill();x.strokeStyle='#6c5ce7';x.lineWidth=2.5;x.stroke();
+  for(var i=0;i<sc.length;i++){var p=gp(i,R*sc[i]/10);x.beginPath();x.arc(p[0],p[1],4,0,Math.PI*2);x.fillStyle=C[i].cl;x.fill();x.strokeStyle='#fff';x.lineWidth=1.5;x.stroke();}
+  x.font='13px "Helvetica Neue",Arial,sans-serif';x.textAlign='center';x.textBaseline='middle';
+  var lr=R+45;for(var i=0;i<C.length;i++){var p=gp(i,lr);x.fillStyle=C[i].cl;x.fillText(C[i].ic+' '+C[i].nm,p[0],p[1]);}
+}
+function retry(){A=[];for(var i=0;i<25;i++)A.push(-1);cq=0;document.getElementById('res').style.display='none';document.getElementById('res').innerHTML='';document.getElementById('intro').style.display='block';window.scrollTo(0,0);}
+function conf(){
+  var cv=document.createElement('canvas');cv.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999';document.body.appendChild(cv);cv.width=window.innerWidth;cv.height=window.innerHeight;
+  var x=cv.getContext('2d'),ps=[],cs=['#6c5ce7','#fd79a8','#00cec9','#fdcb6e','#a29bfe','#74b9ff'];
+  for(var i=0;i<80;i++)ps.push({x:Math.random()*cv.width,y:Math.random()*cv.height-cv.height,w:Math.random()*8+4,h:Math.random()*6+3,vx:(Math.random()-.5)*3,vy:Math.random()*3+2,r:Math.random()*360,rv:(Math.random()-.5)*8,c:cs[Math.floor(Math.random()*cs.length)],a:1});
+  var f=0;
+  function an(){x.clearRect(0,0,cv.width,cv.height);for(var i=0;i<ps.length;i++){var p=ps[i];p.x+=p.vx;p.y+=p.vy;p.r+=p.rv;if(f>60)p.a-=0.015;x.save();x.translate(p.x,p.y);x.rotate(p.r*Math.PI/180);x.globalAlpha=Math.max(0,p.a);x.fillStyle=p.c;x.fillRect(-p.w/2,-p.h/2,p.w,p.h);x.restore();}f++;if(f<140)requestAnimationFrame(an);else document.body.removeChild(cv);}
+  an();
+}
+</script>
+</body>
+</html>
