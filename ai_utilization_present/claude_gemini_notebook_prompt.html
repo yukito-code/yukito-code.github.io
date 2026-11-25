@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude × Gemini Notebook 文書連携 実践キット｜プロンプト完全版</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --accent-gemini: #0ea5e9;
+      --accent-claude: #d97706;
+      --success: #16a34a;
+      --code-bg: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      padding-bottom: 64px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      padding: 48px 20px;
+      text-align: center;
+    }
+
+    header .badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 9999px;
+      padding: 4px 14px;
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 14px;
+    }
+
+    header h1 {
+      font-size: clamp(1.5rem, 3.2vw, 2.15rem);
+      font-weight: 800;
+      line-height: 1.35;
+      margin-bottom: 12px;
+    }
+
+    header p {
+      color: #cbd5e1;
+      max-width: 680px;
+      margin: 0 auto;
+      font-size: 0.96rem;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    .intro-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+      margin-top: -24px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+    }
+
+    .intro-box h2 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .intro-box ul {
+      padding-left: 20px;
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .intro-box li + li {
+      margin-top: 4px;
+    }
+
+    .toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 24px 0 8px;
+    }
+
+    .toc a {
+      text-decoration: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    .toc a:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .section-title {
+      margin-top: 40px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+
+    .section-num {
+      background: var(--text);
+      color: #ffffff;
+      font-size: 0.8rem;
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+    }
+
+    .card-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .tool-tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      color: #ffffff;
+    }
+
+    .tool-gemini {
+      background-color: var(--accent-gemini);
+    }
+
+    .tool-claude {
+      background-color: var(--accent-claude);
+    }
+
+    .card h3 {
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .card .desc {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .prompt-wrap {
+      position: relative;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: #1e293b;
+    }
+
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .copy-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .copy-btn.copied {
+      background: var(--success);
+    }
+
+    .tip-box {
+      background: #eff6ff;
+      border-left: 4px solid var(--primary);
+      padding: 14px 16px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.9rem;
+      color: #1e3a8a;
+      margin-top: 12px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 48px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Claude Codeの教科書 | 実践キット</div>
+  <h1>Claude × Gemini Notebook<br>文書連携プロンプト完全版</h1>
+  <p>動画内で実演した「市場調査→提案書スライド作成」と「社内データ→3資料同時生成＆スキル化」を、そのまま再現できるコピペ用プロンプト集です。</p>
+</header>
+
+<div class="container">
+
+  <div class="intro-box">
+    <h2>使い方のポイント（3ステップ）</h2>
+    <ul>
+      <li>各プロンプトの <strong>【 】で囲まれた箇所</strong> を、ご自身の業種・商品・目的に書き換えて使用してください。</li>
+      <li>Gemini NotebookからClaudeへ渡す際は、必ず<strong>「出典・参照元をテキストで明記させる指示」</strong>を残したまま実行してください。</li>
+      <li>Claudeへ渡す前に、要点メモの数字に誤りがないか1分だけ目を通すと手戻りがゼロになります。</li>
+    </ul>
+  </div>
+
+  <nav class="toc">
+    <a href="#demo1">実演①：市場調査 → 出典付き提案書スライド</a>
+    <a href="#demo2">実演②：社内データ → 3資料同時生成＆スキル化</a>
+  </nav>
+
+  <!-- 実演1 -->
+  <h2 id="demo1" class="section-title">
+    <span class="section-num">実演 ①</span>
+    市場調査からの提案書作成
+  </h2>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="tool-tag tool-gemini">Step 1：Gemini Notebook（旧NotebookLM）用</span>
+      <button class="copy-btn" onclick="copyPrompt('prompt1', this)">プロンプトをコピー</button>
+    </div>
+    <h3>出典付き「要点メモ」作成プロンプト</h3>
+    <p class="desc">自社資料をアップロードし、ディープリサーチで市場データを集めた後に実行します。Claudeに渡すための骨組みと出典テキストを一気に出力します。</p>
+    <div class="prompt-wrap">
+      <pre id="prompt1">アップロードした自社資料と、ディープリサーチで収集した最新トレンド・市場データを統合し、【社内決裁用の「新規獲得キャンペーン企画提案書」】に使う要点メモを作成してください。
+
+以下の5セクションで整理してください。
+1. 【対象業界（例：食品・飲料D2C）】における最新の市場・集客トレンド
+2. 従来の施策の課題と、今回の施策が注目される背景
+3. 自社サービス【自社ブランド・商品名】の現状と狙うべき施策案（【予算上限・社内体制などの制約条件】で回る現実的な案）
+4. 具体的な企画案（施策内容・顧客への訴求ポイント・初回特典など）
+5. 想定スケジュールとKPI（【目標数値（例：新規獲得150件）】の達成シミュレーション）
+
+【重要ルール】
+・すべての市場データ・数値・事例には、必ず「（出典：機関名・年・資料名）」の形式で出典元をテキストで明記してください。
+・アップロードした自社資料に記載のない数値は推測で作らないでください。</pre>
+    </div>
+    <div class="tip-box">
+      <strong>実務のコツ：</strong>Gemini Notebookの引用リンクはコピーすると消えるため、必ずテキストとして出典を出力させてからClaudeへ渡します。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="tool-tag tool-claude">Step 2：Claude / Claude Code 用</span>
+      <button class="copy-btn" onclick="copyPrompt('prompt2', this)">プロンプトをコピー</button>
+    </div>
+    <h3>編集可能なPowerPointスライド生成プロンプト</h3>
+    <p class="desc">Step 1で出力した要点メモをコピー（またはテキストファイルとして添付）し、Claudeへ渡して実行します。</p>
+    <div class="prompt-wrap">
+      <pre id="prompt2">添付の要点メモをもとに、【部長決裁用の企画提案書】のスライドを全【10】枚、編集可能なPowerPoint（.pptx）形式で作成してください。
+
+【作成ルール】
+・ビジネスでそのまま使える、【清潔感のある落ち着いた色合い（例：ブラウンと白を基調）】の見やすいデザインにすること。
+・1スライド1メッセージとし、文字を詰め込みすぎず箇条書きや表を活用すること。
+・要点メモ内の数字は一切変更・推測しないこと。
+・市場データや数値を記載したスライドの下部には、必ず要点メモの出典元を記載すること。</pre>
+    </div>
+  </div>
+
+  <!-- 実演2 -->
+  <h2 id="demo2" class="section-title">
+    <span class="section-num">実演 ②</span>
+    社内データからの3資料同時生成と自動化
+  </h2>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="tool-tag tool-gemini">Step 1：Gemini Notebook（旧NotebookLM）用</span>
+      <button class="copy-btn" onclick="copyPrompt('prompt3', this)">プロンプトをコピー</button>
+    </div>
+    <h3>社内データの統合「要点メモ」作成プロンプト</h3>
+    <p class="desc">実績データ・アンケート結果・会議議事録など、複数の社内資料をアップロードした状態で実行し、矛盾のない1枚の要点メモを作ります。</p>
+    <div class="prompt-wrap">
+      <pre id="prompt3">アップロードした【3つ】の社内資料（【実績サマリー、アンケート集計、振り返り会議議事録】）のみをもとに、報告用の「要点メモ」を作成してください。
+
+以下の3セクションで整理し、すべての数値や決定事項の末尾に、どの資料から引用したかを「（参照：資料名）」と明記してください。
+1. 全体実績サマリー（費用、獲得数、目標達成率、主要KPI、内訳）
+2. 顧客・現場の声（満足度、評価された点トップ3、改善要望トップ3）
+3. 次回以降の改善アクション・担当者・期限
+
+【重要ルール】
+・アップロードした資料に記載のない数字の推測・補完は一切行わないでください。</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="tool-tag tool-claude">Step 2：Claude / Claude Code 用</span>
+      <button class="copy-btn" onclick="copyPrompt('prompt4', this)">プロンプトをコピー</button>
+    </div>
+    <h3>相手別「3資料の同時生成」プロンプト</h3>
+    <p class="desc">Step 1で作成した要点メモを添付し、提出先の異なる3つの成果物を一括生成します。</p>
+    <div class="prompt-wrap">
+      <pre id="prompt4">添付の要点メモのみをもとに、以下の3種類の資料を同時に作成してください。要点メモに記載のない数字の推測や変更は厳禁です。
+
+1. 【部長・経営層向け】振り返りサマリースライド（PowerPoint形式・5枚。結論と重要数値のみシンプルに整理）
+2. 【社内チーム向け】改善アクション詳細レポート（Word形式。媒体・項目別の振り返り、顧客の声、担当者・期限を表形式で整理）
+3. 【顧客・関係者向け】お礼と今後の改善スケジュールのお知らせメール文面（温かく丁寧なトーン）</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="tool-tag tool-claude">Step 3：Claude / Claude Code 用（自動化）</span>
+      <button class="copy-btn" onclick="copyPrompt('prompt5', this)">プロンプトをコピー</button>
+    </div>
+    <h3>翌月以降も再現できる「スキル登録」プロンプト</h3>
+    <p class="desc">Step 2の出力がうまくいった直後に続けて送信することで、同じフォーマット・手順をスキルとして保存します。</p>
+    <div class="prompt-wrap">
+      <pre id="prompt5">今行った「要点メモから、経営層向けスライド・チーム向け詳細レポート・お礼メールの3点セットを作成する手順とフォーマット」を、次回以降の振り返りでも再現できるスキル（スキル名：【campaign_review_3set】）として登録してください。</pre>
+    </div>
+    <div class="tip-box">
+      <strong>次回以降の運用：</strong>Gemini Notebookで今月分の要点メモを出し、Claudeに渡して登録したスキルを呼び出すだけで完了します。
+    </div>
+  </div>
+
+  <footer>
+    <p>Claude Codeの教科書 | 東大卒AI専門家ゆきと</p>
+  </footer>
+
+</div>
+
+<script>
+  function copyPrompt(elementId, btn) {
+    const text = document.getElementById(elementId).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const originalText = btn.innerText;
+      btn.innerText = 'コピー完了！';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerText = originalText;
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>
