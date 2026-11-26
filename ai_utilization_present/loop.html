@@ -7,234 +7,230 @@
   <style>
     :root {
       color-scheme: light;
-      --ink: #102a2a;
-      --muted: #5d7371;
-      --line: #cddbd8;
-      --paper: #ffffff;
-      --canvas: #f2f6f5;
-      --teal: #0f766e;
-      --teal-dark: #0a4f4a;
-      --teal-pale: #e5f3f0;
+      --ink: #152238;
+      --muted: #596579;
+      --line: #dce3ed;
+      --surface: #ffffff;
+      --soft: #f5f7fb;
+      --brand: #2a9d8f;
+      --brand-dark: #207f76;
+      --good: #13795b;
+      --warn: #d4a72c;
+      --shadow: 0 16px 40px rgba(31, 42, 68, .08);
     }
 
     * { box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
-
     body {
       margin: 0;
       color: var(--ink);
-      background: var(--canvas);
-      font-family: Inter, "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #eaf6f4 0, #f8faf9 340px, #f8faf9 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif;
       line-height: 1.7;
     }
 
     .page {
-      width: min(960px, calc(100% - 40px));
+      width: min(1080px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 40px 0 72px;
+      padding: 52px 0 80px;
     }
 
     .hero {
-      position: relative;
-      overflow: hidden;
-      padding: clamp(36px, 7vw, 72px);
-      color: #fff;
-      background: var(--teal-dark);
-    }
-
-    .hero::after {
-      position: absolute;
-      right: -80px;
-      bottom: -150px;
-      width: 330px;
-      height: 330px;
-      border: 48px solid rgba(255, 255, 255, .07);
-      border-radius: 50%;
-      content: "";
-    }
-
-    .eyebrow {
-      margin: 0 0 18px;
-      color: #9de0d8;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: .16em;
-      text-transform: uppercase;
+      padding: 36px;
+      border: 1px solid rgba(42, 157, 143, .18);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, .9);
+      box-shadow: var(--shadow);
     }
 
     h1 {
-      position: relative;
-      z-index: 1;
-      max-width: 760px;
       margin: 0;
-      font-size: clamp(34px, 6vw, 58px);
-      font-weight: 750;
-      line-height: 1.2;
-      letter-spacing: -.04em;
+      font-size: clamp(28px, 5vw, 46px);
+      line-height: 1.25;
+      letter-spacing: -.03em;
     }
 
     .lead {
-      position: relative;
-      z-index: 1;
-      max-width: 620px;
-      margin: 22px 0 0;
-      color: #d5e9e6;
-      font-size: 16px;
+      max-width: 780px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .step {
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: var(--soft);
+      font-weight: 700;
+    }
+
+    .step span {
+      display: inline-grid;
+      width: 26px;
+      height: 26px;
+      margin-right: 7px;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: var(--brand);
+      font-size: 13px;
     }
 
     .notice {
-      position: relative;
-      z-index: 1;
-      margin: 22px 0 0;
-      color: #abd8d2;
-      font-size: 12px;
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-left: 4px solid var(--warn);
+      border-radius: 8px;
+      color: #806000;
+      background: #fffaf0;
+      font-size: 14px;
     }
 
     .toc {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      margin: 0 0 36px;
-      border: 1px solid var(--line);
-      border-top: 0;
-      background: var(--paper);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 24px 0 0;
     }
 
     .toc a {
-      padding: 15px 10px;
-      border-right: 1px solid var(--line);
-      color: var(--teal-dark);
-      font-size: 12px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background: white;
+      font-size: 14px;
       font-weight: 700;
-      line-height: 1.45;
-      text-align: center;
       text-decoration: none;
     }
 
-    .toc a:last-child { border-right: 0; }
-    .toc a:hover { background: var(--teal-pale); }
-
     .lab {
-      display: grid;
-      grid-template-columns: 190px minmax(0, 1fr);
-      gap: 36px;
-      margin-top: 18px;
-      padding: 34px;
+      margin-top: 28px;
+      padding: 30px;
       border: 1px solid var(--line);
-      background: var(--paper);
+      border-radius: 22px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
       scroll-margin-top: 20px;
     }
 
     .lab-head {
-      display: block;
-      grid-row: 1 / 10;
-      padding-right: 22px;
-      border-right: 1px solid var(--line);
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
     }
 
     .number {
-      margin-bottom: 54px;
-      color: var(--teal);
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 42px;
-      line-height: 1;
+      display: grid;
+      flex: 0 0 46px;
+      width: 46px;
+      height: 46px;
+      place-items: center;
+      border-radius: 14px;
+      color: white;
+      background: var(--brand);
+      font-size: 20px;
+      font-weight: 900;
     }
 
     h2 {
       margin: 0;
-      font-size: 22px;
+      font-size: clamp(23px, 3vw, 30px);
       line-height: 1.35;
-      letter-spacing: -.02em;
     }
 
     .summary {
-      margin: 10px 0 0;
+      margin: 5px 0 0;
       color: var(--muted);
-      font-size: 13px;
-      line-height: 1.65;
     }
 
     .sample {
-      grid-column: 2;
-      margin: 0;
-      color: var(--teal);
-      font-size: 12px;
+      display: flex;
+      gap: 10px;
+      margin: 20px 0 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: #125b47;
+      background: #eaf8f3;
+      font-size: 14px;
       font-weight: 700;
-      letter-spacing: .02em;
     }
 
-    .prompt-block {
-      grid-column: 2;
-      min-width: 0;
-      margin-top: 0;
-    }
-
-    .prompt-block + .prompt-block { margin-top: 12px; }
+    .prompt-block { margin-top: 18px; }
 
     .prompt-head {
       display: flex;
       justify-content: space-between;
-      gap: 16px;
+      gap: 12px;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     h3 {
       margin: 0;
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 17px;
     }
 
     button {
-      min-height: 36px;
-      padding: 7px 16px;
-      border: 1px solid var(--teal);
-      border-radius: 2px;
-      color: #fff;
-      background: var(--teal);
+      min-height: 40px;
+      padding: 8px 14px;
+      border: 0;
+      border-radius: 10px;
+      color: white;
+      background: var(--brand);
       font: inherit;
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 14px;
+      font-weight: 800;
       cursor: pointer;
     }
 
-    button:hover { background: var(--teal-dark); }
-    button:focus-visible { outline: 3px solid rgba(15, 118, 110, .25); outline-offset: 2px; }
+    button:hover { background: var(--brand-dark); }
+    button:focus-visible { outline: 3px solid rgba(42, 157, 143, .25); outline-offset: 2px; }
 
     textarea {
       display: block;
       width: 100%;
-      min-height: 300px;
+      min-height: 290px;
       resize: vertical;
       padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: 0;
-      color: #1c3433;
-      background: #f8faf9;
-      font: 13px/1.75 ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono CJK JP", monospace;
+      border: 1px solid #cdd5e2;
+      border-radius: 14px;
+      color: #202b3d;
+      background: #fbfcfe;
+      font: 14px/1.75 ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono CJK JP", monospace;
     }
 
-    textarea:focus { border-color: var(--teal); outline: 2px solid rgba(15, 118, 110, .12); }
+    textarea:focus { border-color: var(--brand); outline: 3px solid rgba(42, 157, 143, .12); }
 
-    .result-note { display: none; }
+    .result-note {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
 
     .learn {
-      grid-column: 2;
-      margin: 2px 0 0;
-      padding-top: 14px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 13px;
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: var(--soft);
     }
 
-    .learn strong { color: var(--ink); }
+    .learn strong { color: var(--brand-dark); }
 
     .footer {
       margin-top: 30px;
-      padding: 18px 0;
-      border-top: 1px solid var(--line);
+      padding: 22px;
+      border-radius: 16px;
       color: var(--muted);
-      font-size: 12px;
+      background: #eef1f7;
+      font-size: 14px;
     }
 
     .toast {
@@ -242,31 +238,24 @@
       right: 20px;
       bottom: 20px;
       z-index: 10;
-      padding: 11px 16px;
-      border-radius: 2px;
-      color: #fff;
-      background: var(--teal-dark);
-      box-shadow: 0 10px 28px rgba(10, 79, 74, .2);
+      padding: 12px 18px;
+      border-radius: 12px;
+      color: white;
+      background: #172033;
+      box-shadow: var(--shadow);
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(12px);
       pointer-events: none;
       transition: .2s ease;
     }
 
     .toast.show { opacity: 1; transform: translateY(0); }
 
-    @media (max-width: 760px) {
-      .page { width: min(100% - 20px, 960px); padding-top: 10px; }
-      .hero { padding: 36px 24px; }
-      .toc { grid-template-columns: 1fr; }
-      .toc a { border-right: 0; border-bottom: 1px solid var(--line); text-align: left; }
-      .toc a:last-child { border-bottom: 0; }
-      .lab { display: block; padding: 24px 18px; }
-      .lab-head { display: grid; grid-template-columns: 42px 1fr; gap: 12px; padding: 0 0 20px; border-right: 0; border-bottom: 1px solid var(--line); }
-      .number { grid-row: 1 / 3; margin: 0; font-size: 34px; }
-      .summary { margin-top: 6px; }
-      .sample, .prompt-block, .learn { margin-top: 18px; }
-      .prompt-head { align-items: center; }
+    @media (max-width: 720px) {
+      .page { width: min(100% - 20px, 1080px); padding-top: 20px; }
+      .hero, .lab { padding: 22px 18px; border-radius: 18px; }
+      .steps { grid-template-columns: 1fr; }
+      .prompt-head { align-items: flex-start; }
       textarea { min-height: 360px; padding: 14px; }
     }
   </style>
@@ -274,10 +263,14 @@
 <body>
   <main class="page">
     <section class="hero">
-      <p class="eyebrow">非エンジニア向け・実践キット</p>
       <h1>コピペで試せる<br>ループエンジニアリング5選</h1>
-      <p class="lead">使いたい型を選び、プロンプトをコピーしてAIへ貼るだけ。5つの確認方法を、そのまま試せます。</p>
-      <p class="notice">個人情報・機密情報は入力しないでください。</p>
+      <p class="lead">難しい設定は不要です。各プロンプトには具体例が入っています。上から順にコピーして、普段使っているChatGPTやClaudeへ貼り付けるだけで、5種類の「作業・確認・修正」の回し方を体験できます。</p>
+      <div class="steps" aria-label="使い方">
+        <div class="step"><span>1</span>試したい型を選ぶ</div>
+        <div class="step"><span>2</span>プロンプトをコピー</div>
+        <div class="step"><span>3</span>AIへ貼り付ける</div>
+      </div>
+      <p class="notice">実在する顧客情報、個人情報、機密情報は入力しないでください。このキットは仕組みを安全に体験するためのサンプルです。</p>
       <nav class="toc" aria-label="5つの実践ラボ">
         <a href="#self-check">1. 自己チェック</a>
         <a href="#rule-check">2. ルールチェック</a>
@@ -295,11 +288,11 @@
           <p class="summary">作業したAI自身に、抜け漏れや品質を確認させてから最終版を出させます。</p>
         </div>
       </div>
-      <div class="sample">SAMPLE / 日程調整メール</div>
+      <div class="sample">今回のサンプル：取引先との打ち合わせ日程を調整するメール</div>
       <div class="prompt-block">
         <div class="prompt-head">
-          <h3>プロンプト</h3>
-          <button type="button" data-copy="prompt-self">コピー</button>
+          <h3>このプロンプトをそのままコピー</h3>
+          <button type="button" data-copy="prompt-self">コピーする</button>
         </div>
         <textarea id="prompt-self" spellcheck="false">あなたはビジネスメールの作成担当です。以下の条件でメールを作成してください。
 
@@ -335,11 +328,11 @@
           <p class="summary">明文化した条件で合否を判定し、不合格なら条件を満たすまで修正させます。</p>
         </div>
       </div>
-      <div class="sample">SAMPLE / セミナー告知文</div>
+      <div class="sample">今回のサンプル：無料オンラインセミナーの告知文</div>
       <div class="prompt-block">
         <div class="prompt-head">
-          <h3>プロンプト</h3>
-          <button type="button" data-copy="prompt-rule">コピー</button>
+          <h3>このプロンプトをそのままコピー</h3>
+          <button type="button" data-copy="prompt-rule">コピーする</button>
         </div>
         <textarea id="prompt-rule" spellcheck="false">あなたはイベント告知文の作成担当です。以下の内容を使い、ルールをすべて満たす告知文を作成してください。
 
@@ -381,11 +374,11 @@
           <p class="summary">作成担当とレビュー担当を分け、別の視点から品質を確認します。</p>
         </div>
       </div>
-      <div class="sample">SAMPLE / 研修の営業資料</div>
+      <div class="sample">今回のサンプル：生成AI入門研修を提案する営業資料</div>
       <div class="prompt-block">
         <div class="prompt-head">
           <h3>STEP 1：作成担当AIへ貼る</h3>
-          <button type="button" data-copy="prompt-maker">コピー</button>
+          <button type="button" data-copy="prompt-maker">コピーする</button>
         </div>
         <textarea id="prompt-maker" spellcheck="false">あなたは法人向け営業資料の構成を作る担当です。次の条件をもとに、生成AI入門研修を提案する営業資料の構成を作成してください。
 
@@ -413,7 +406,7 @@
       <div class="prompt-block">
         <div class="prompt-head">
           <h3>STEP 2：別の新しいチャットへ貼る</h3>
-          <button type="button" data-copy="prompt-reviewer">コピー</button>
+          <button type="button" data-copy="prompt-reviewer">コピーする</button>
         </div>
         <textarea id="prompt-reviewer" spellcheck="false">あなたは法人向け営業資料のレビュー担当です。以下の構成案をレビューしてください。
 
@@ -452,11 +445,11 @@
           <p class="summary">AIに下準備を任せ、外部へ影響する重要な判断だけを人間へ戻します。</p>
         </div>
       </div>
-      <div class="sample">SAMPLE / ファイル整理</div>
+      <div class="sample">今回のサンプル：ローカルフォルダを整理し、削除前に人間が承認</div>
       <div class="prompt-block">
         <div class="prompt-head">
-          <h3>プロンプト</h3>
-          <button type="button" data-copy="prompt-human">コピー</button>
+          <h3>このプロンプトをそのままコピー</h3>
+          <button type="button" data-copy="prompt-human">コピーする</button>
         </div>
         <textarea id="prompt-human" spellcheck="false">あなたはローカルフォルダ整理の補助担当です。次の架空のファイル一覧を確認し、整理案と削除候補を作ってください。ただし、実際のファイル操作はせず、必ず最後に人間へ承認を求めてください。
 
@@ -501,11 +494,11 @@
           <p class="summary">公開後の反応や数値を評価に使い、次に試す案を改善します。</p>
         </div>
       </div>
-      <div class="sample">SAMPLE / SNS投稿の比較</div>
+      <div class="sample">今回のサンプル：3つのSNS投稿を架空の実績データで比較</div>
       <div class="prompt-block">
         <div class="prompt-head">
-          <h3>プロンプト</h3>
-          <button type="button" data-copy="prompt-real">コピー</button>
+          <h3>このプロンプトをそのままコピー</h3>
+          <button type="button" data-copy="prompt-real">コピーする</button>
         </div>
         <textarea id="prompt-real" spellcheck="false">あなたはSNS投稿の改善担当です。以下の3つの投稿案と、公開後を想定した架空の実績を分析してください。
 
@@ -547,7 +540,7 @@
     </section>
 
     <footer class="footer">
-      AIの出力は必ず確認してください。公開・契約・支払い・削除などの重要な操作は、人間の承認を挟みましょう。
+      AIの出力は必ず確認してください。公開・契約・支払い・削除など重要な操作には、人間の承認を挟みましょう。
     </footer>
   </main>
 
