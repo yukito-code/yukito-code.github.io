@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>コピペで試せる ループエンジニアリング5選</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #152238;
+      --muted: #596579;
+      --line: #dce3ed;
+      --surface: #ffffff;
+      --soft: #f5f7fb;
+      --brand: #5b4bdb;
+      --brand-dark: #4435bd;
+      --good: #13795b;
+      --warn: #9a6700;
+      --shadow: 0 16px 40px rgba(31, 42, 68, .08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: linear-gradient(180deg, #f3f0ff 0, #f8f9fc 340px, #f8f9fc 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif;
+      line-height: 1.7;
+    }
+
+    .page {
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 52px 0 80px;
+    }
+
+    .hero {
+      padding: 36px;
+      border: 1px solid rgba(91, 75, 219, .16);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, .9);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--brand);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 5vw, 46px);
+      line-height: 1.25;
+      letter-spacing: -.03em;
+    }
+
+    .lead {
+      max-width: 780px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .step {
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: var(--soft);
+      font-weight: 700;
+    }
+
+    .step span {
+      display: inline-grid;
+      width: 26px;
+      height: 26px;
+      margin-right: 7px;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: var(--brand);
+      font-size: 13px;
+    }
+
+    .notice {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-left: 4px solid var(--warn);
+      border-radius: 8px;
+      color: #674700;
+      background: #fff8df;
+      font-size: 14px;
+    }
+
+    .toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 24px 0 0;
+    }
+
+    .toc a {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background: white;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .lab {
+      margin-top: 28px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      scroll-margin-top: 20px;
+    }
+
+    .lab-head {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .number {
+      display: grid;
+      flex: 0 0 46px;
+      width: 46px;
+      height: 46px;
+      place-items: center;
+      border-radius: 14px;
+      color: white;
+      background: var(--brand);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(23px, 3vw, 30px);
+      line-height: 1.35;
+    }
+
+    .summary {
+      margin: 5px 0 0;
+      color: var(--muted);
+    }
+
+    .sample {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: #125b47;
+      background: #eaf8f3;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .prompt-block { margin-top: 18px; }
+
+    .prompt-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    button {
+      min-height: 40px;
+      padding: 8px 14px;
+      border: 0;
+      border-radius: 10px;
+      color: white;
+      background: var(--brand);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    button:hover { background: var(--brand-dark); }
+    button:focus-visible { outline: 3px solid rgba(91, 75, 219, .3); outline-offset: 2px; }
+
+    textarea {
+      display: block;
+      width: 100%;
+      min-height: 290px;
+      resize: vertical;
+      padding: 18px;
+      border: 1px solid #cdd5e2;
+      border-radius: 14px;
+      color: #202b3d;
+      background: #fbfcfe;
+      font: 14px/1.75 ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono CJK JP", monospace;
+    }
+
+    textarea:focus { border-color: var(--brand); outline: 3px solid rgba(91, 75, 219, .12); }
+
+    .result-note {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .learn {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: var(--soft);
+    }
+
+    .learn strong { color: var(--brand-dark); }
+
+    .footer {
+      margin-top: 30px;
+      padding: 22px;
+      border-radius: 16px;
+      color: var(--muted);
+      background: #eef1f7;
+      font-size: 14px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 10;
+      padding: 12px 18px;
+      border-radius: 12px;
+      color: white;
+      background: #172033;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: .2s ease;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 720px) {
+      .page { width: min(100% - 20px, 1080px); padding-top: 20px; }
+      .hero, .lab { padding: 22px 18px; border-radius: 18px; }
+      .steps { grid-template-columns: 1fr; }
+      .prompt-head { align-items: flex-start; }
+      textarea { min-height: 360px; padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <p class="eyebrow">非エンジニア向け・実践キット</p>
+      <h1>コピペで試せる<br>ループエンジニアリング5選</h1>
+      <p class="lead">難しい設定は不要です。各プロンプトには具体例が入っています。上から順にコピーして、普段使っているChatGPTやClaudeへ貼り付けるだけで、5種類の「作業・確認・修正」の回し方を体験できます。</p>
+      <div class="steps" aria-label="使い方">
+        <div class="step"><span>1</span>試したい型を選ぶ</div>
+        <div class="step"><span>2</span>プロンプトをコピー</div>
+        <div class="step"><span>3</span>AIへ貼り付ける</div>
+      </div>
+      <p class="notice">実在する顧客情報、個人情報、機密情報は入力しないでください。このキットは仕組みを安全に体験するためのサンプルです。</p>
+      <nav class="toc" aria-label="5つの実践ラボ">
+        <a href="#self-check">1. 自己チェック</a>
+        <a href="#rule-check">2. ルールチェック</a>
+        <a href="#ai-review">3. 別AIレビュー</a>
+        <a href="#human-approval">4. 人間承認</a>
+        <a href="#real-world">5. 実環境評価</a>
+      </nav>
+    </section>
+
+    <section class="lab" id="self-check">
+      <div class="lab-head">
+        <div class="number">1</div>
+        <div>
+          <h2>自己チェック型</h2>
+          <p class="summary">作業したAI自身に、抜け漏れや品質を確認させてから最終版を出させます。</p>
+        </div>
+      </div>
+      <div class="sample">今回のサンプル：取引先との打ち合わせ日程を調整するメール</div>
+      <div class="prompt-block">
+        <div class="prompt-head">
+          <h3>このプロンプトをそのままコピー</h3>
+          <button type="button" data-copy="prompt-self">コピーする</button>
+        </div>
+        <textarea id="prompt-self" spellcheck="false">あなたはビジネスメールの作成担当です。以下の条件でメールを作成してください。
+
+【状況】
+・相手：取引先の田中様
+・目的：次回の打ち合わせ日程を決める
+・候補日時：12月3日 10時、12月4日 14時、12月5日 16時
+・所要時間：60分
+・実施方法：オンライン
+・文体：丁寧だが、堅すぎない
+
+【作業手順】
+1. まずメールの下書きを作成してください。
+2. 作成後、次の4項目を自分でチェックしてください。
+   - 宛名と目的が明確か
+   - 3つの候補日時が正確に入っているか
+   - 相手に回答してほしい内容が明確か
+   - 失礼な表現や不自然な日本語がないか
+3. 問題が1つでもあれば、自分で修正してください。
+4. 最後に「自己チェック結果」と「修正済みの最終版」を提示してください。
+
+チェックを省略せず、最初の下書きのまま終了しないでください。</textarea>
+        <p class="result-note">AIが「作成者」と「確認者」を兼ねます。出力された自己チェック結果と最終版の違いを確認してください。</p>
+      </div>
+      <div class="learn"><strong>体験ポイント：</strong>最も簡単なループです。ただし、AI自身の思い込みや事実誤認は見逃す可能性があります。</div>
+    </section>
+
+    <section class="lab" id="rule-check">
+      <div class="lab-head">
+        <div class="number">2</div>
+        <div>
+          <h2>ルールチェック型</h2>
+          <p class="summary">明文化した条件で合否を判定し、不合格なら条件を満たすまで修正させます。</p>
+        </div>
+      </div>
+      <div class="sample">今回のサンプル：無料オンラインセミナーの告知文</div>
+      <div class="prompt-block">
+        <div class="prompt-head">
+          <h3>このプロンプトをそのままコピー</h3>
+          <button type="button" data-copy="prompt-rule">コピーする</button>
+        </div>
+        <textarea id="prompt-rule" spellcheck="false">あなたはイベント告知文の作成担当です。以下の内容を使い、ルールをすべて満たす告知文を作成してください。
+
+【イベント情報】
+・イベント名：はじめての生成AI仕事術セミナー
+・開催日：12月10日
+・開始時刻：20時
+・所要時間：60分
+・開催方法：Zoom
+・参加費：無料
+・対象者：仕事で生成AIを使い始めたい初心者
+・申込URL：https://example.com/ai-seminar
+
+【合格ルール】
+・本文は250文字以内
+・「生成AI」「初心者」「無料」の3語を必ず入れる
+・開催日、開始時刻、所要時間、開催方法、参加費を必ず入れる
+・申込URLを最後の行に置く
+・「絶対」「誰でも必ず」「人生が変わる」は使わない
+
+【ループ手順】
+1. 告知文を作成する
+2. 上記の合格ルールを1項目ずつ検査する
+3. 1つでも不合格なら、理由を確認して告知文を修正する
+4. 修正版をもう一度検査する
+5. 最後に、各ルールの合否表と最終版を提示する
+
+すべての条件を満たしても、誇張した表現や不自然な文章にはしないでください。</textarea>
+        <p class="result-note">条件が明確なので、AIが何を直したのか追いやすい型です。合格表がすべて「合格」になっているか確認してください。</p>
+      </div>
+      <div class="learn"><strong>体験ポイント：</strong>ルールを満たすことと、魅力的な文章であることは別です。測定できる条件の確認に使います。</div>
+    </section>
+
+    <section class="lab" id="ai-review">
+      <div class="lab-head">
+        <div class="number">3</div>
+        <div>
+          <h2>別AIレビュー型</h2>
+          <p class="summary">作成担当とレビュー担当を分け、別の視点から品質を確認します。</p>
+        </div>
+      </div>
+      <div class="sample">今回のサンプル：生成AI入門研修を提案する営業資料</div>
+      <div class="prompt-block">
+        <div class="prompt-head">
+          <h3>STEP 1：作成担当AIへ貼る</h3>
+          <button type="button" data-copy="prompt-maker">コピーする</button>
+        </div>
+        <textarea id="prompt-maker" spellcheck="false">あなたは法人向け営業資料の構成を作る担当です。次の条件をもとに、生成AI入門研修を提案する営業資料の構成を作成してください。
+
+【提案先】
+・従業員100名程度の企業
+・生成AIを導入したが、使う社員が一部に限られている
+・情報漏えいを心配して利用を控える社員もいる
+・まずは日常業務で安全に使える基本を学びたい
+
+【提案する研修】
+・非エンジニア向け生成AI入門研修
+・所要時間は90分
+・内容は基本操作、業務での活用例、入力してはいけない情報、安全な使い方
+・研修後に業務別プロンプト集を配布
+
+【出力形式】
+1. 顧客が抱えている課題
+2. 提案する研修の内容
+3. 導入メリット
+4. 実施までの流れ
+5. 次に取ってほしい行動
+
+各ページの見出しと要点を示し、確認できない実績や効果を創作しないでください。</textarea>
+      </div>
+      <div class="prompt-block">
+        <div class="prompt-head">
+          <h3>STEP 2：別の新しいチャットへ貼る</h3>
+          <button type="button" data-copy="prompt-reviewer">コピーする</button>
+        </div>
+        <textarea id="prompt-reviewer" spellcheck="false">あなたは法人向け営業資料のレビュー担当です。以下の構成案をレビューしてください。
+
+【レビュー対象】
+1ページ目：生成AIを導入しても、一部の社員しか使えていないという課題
+2ページ目：非エンジニア向けに、基本操作、活用例、安全な使い方を90分で学ぶ研修
+3ページ目：メール、要約、アイデア整理など日常業務の例を扱う
+4ページ目：入力してはいけない情報と、社内ルールを確認する方法を扱う
+5ページ目：研修後に業務別プロンプト集を配布する
+6ページ目：対象部署と参加人数を確認する打ち合わせを提案する
+
+【評価項目】
+・顧客の課題と研修内容がつながっているか
+・非エンジニア向けであることが伝わるか
+・安全面の不安に答えているか
+・確認できない効果や実績を断定していないか
+・次に取ってほしい行動が明確か
+
+【停止条件】
+・各項目を5点満点でレビューする
+・3点未満の項目だけ改善案を出す
+・すべて3点以上なら合格とし、追加の粗探しをしない
+・修正提案は最大3件まで
+
+最後に「合格」または「要修正」を明記し、要修正の場合だけ修正版を提示してください。</textarea>
+        <p class="result-note">STEP 2は、STEP 1とは別の新しいチャットで試すと役割の違いが分かりやすくなります。レビュー対象にはサンプル提案を入れてあるため、そのまま実行できます。</p>
+      </div>
+      <div class="learn"><strong>体験ポイント：</strong>「追加の粗探しをしない」「最大3件」という停止条件が、無限ループを防ぎます。</div>
+    </section>
+
+    <section class="lab" id="human-approval">
+      <div class="lab-head">
+        <div class="number">4</div>
+        <div>
+          <h2>人間承認型</h2>
+          <p class="summary">AIに下準備を任せ、外部へ影響する重要な判断だけを人間へ戻します。</p>
+        </div>
+      </div>
+      <div class="sample">今回のサンプル：ローカルフォルダを整理し、削除前に人間が承認</div>
+      <div class="prompt-block">
+        <div class="prompt-head">
+          <h3>このプロンプトをそのままコピー</h3>
+          <button type="button" data-copy="prompt-human">コピーする</button>
+        </div>
+        <textarea id="prompt-human" spellcheck="false">あなたはローカルフォルダ整理の補助担当です。次の架空のファイル一覧を確認し、整理案と削除候補を作ってください。ただし、実際のファイル操作はせず、必ず最後に人間へ承認を求めてください。
+
+【架空のファイル一覧】
+・2026_project_plan_final.docx
+・2026_project_plan_final_copy.docx
+・customer_list.csv
+・meeting_notes_2026-11-20.md
+・proposal_draft_old.txt
+・proposal_approved.pdf
+・temp_cache.tmp
+・api_key_backup.txt
+
+【整理ルール】
+・顧客情報、承認済み資料、認証情報の可能性があるファイルは削除候補にしない
+・名前だけで重複と断定せず、内容確認が必要と書く
+・一時ファイルと古い下書きは削除候補にできるが、人間の承認を必要とする
+・AIは削除や移動を実行したと判断してはいけない
+
+【作業手順】
+1. ファイルを「保持」「内容確認」「削除候補」に分類する
+2. 各分類の理由を書く
+3. 削除してはいけない可能性があるファイルを別に示す
+4. 人間が確認すべき項目をチェックリストにする
+5. 最後に必ず「人間の承認待ち」と表示する
+
+【禁止事項】
+・ファイルを削除、移動、改名する、または実行したと仮定する
+・名前だけで重複ファイルと断定する
+・customer_list.csv、proposal_approved.pdf、api_key_backup.txtを削除候補にする
+・人間の承認を省略する</textarea>
+        <p class="result-note">AIが整理案をどこまで作り、削除判断を人間へ戻したか確認してください。実際のローカルファイルは操作されません。</p>
+      </div>
+      <div class="learn"><strong>体験ポイント：</strong>人間をすべての工程に入れるのではなく、ファイルを削除する直前のような重要な境界だけに配置します。</div>
+    </section>
+
+    <section class="lab" id="real-world">
+      <div class="lab-head">
+        <div class="number">5</div>
+        <div>
+          <h2>実環境評価型</h2>
+          <p class="summary">公開後の反応や数値を評価に使い、次に試す案を改善します。</p>
+        </div>
+      </div>
+      <div class="sample">今回のサンプル：3つのSNS投稿を架空の実績データで比較</div>
+      <div class="prompt-block">
+        <div class="prompt-head">
+          <h3>このプロンプトをそのままコピー</h3>
+          <button type="button" data-copy="prompt-real">コピーする</button>
+        </div>
+        <textarea id="prompt-real" spellcheck="false">あなたはSNS投稿の改善担当です。以下の3つの投稿案と、公開後を想定した架空の実績を分析してください。
+
+【目的】
+無料の生成AI入門セミナーへの申込ページを見てもらうこと。
+
+【投稿A】
+文章：「生成AIを仕事で使いたいけれど、何から始めればいいか分からない方へ。初心者向けの無料セミナーを開催します。」
+表示回数：5,000
+リンククリック：75
+申込数：12
+
+【投稿B】
+文章：「毎日30分かかる文章作成を、生成AIでもっとラクに。初心者向け無料セミナーで、明日から使える基本を紹介します。」
+表示回数：4,200
+リンククリック：105
+申込数：21
+
+【投稿C】
+文章：「生成AIを使わないと時代に取り残されます。今すぐ無料セミナーへ参加してください。」
+表示回数：6,800
+リンククリック：136
+申込数：9
+
+【分析手順】
+1. 各投稿のクリック率を計算する
+2. 各投稿のクリック後の申込率を計算する
+3. 目的に最も近い成果を出した投稿を選ぶ
+4. 表示回数やクリック数だけで勝者を決めない
+5. 差が生まれた理由を「事実」と「仮説」に分ける
+6. 投稿Cのように不安を過度にあおる表現は、短期的な反応が良くても推奨しない
+7. 分析結果をもとに、次に試す新しい投稿案を2つ作る
+8. 次回、何の数値を確認すべきかを示す
+
+これは架空のデータです。断定ではなく、次の実験につながる仮説として分析してください。</textarea>
+        <p class="result-note">まずは架空データで流れを体験できます。実際に使う場合は、投稿文と数値だけをご自身のものへ置き換えてください。</p>
+      </div>
+      <div class="learn"><strong>体験ポイント：</strong>クリック数だけではなく、最終目的に近い申込数や表現の健全性まで評価します。</div>
+    </section>
+
+    <footer class="footer">
+      このキットは、ループエンジニアリングの考え方をコピペで体験するための教材です。AIの出力は必ずしも正しいとは限りません。外部送信、公開、契約、支払い、削除など重要な操作は自動化せず、人間が内容を確認してください。
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">コピーしました</div>
+
+  <script>
+    const toast = document.getElementById('toast');
+    let toastTimer;
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    async function copyPrompt(id) {
+      const field = document.getElementById(id);
+      if (!field) return;
+
+      try {
+        await navigator.clipboard.writeText(field.value);
+        showToast('プロンプトをコピーしました');
+      } catch (error) {
+        field.focus();
+        field.select();
+        const copied = document.execCommand('copy');
+        showToast(copied ? 'プロンプトをコピーしました' : '選択した文章をコピーしてください');
+      }
+    }
+
+    document.querySelectorAll('[data-copy]').forEach((button) => {
+      button.addEventListener('click', () => copyPrompt(button.dataset.copy));
+    });
+  </script>
+</body>
+</html>
